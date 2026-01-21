@@ -1,0 +1,25 @@
+[project]
+name = "yescity_recommendation_ai"
+version = "0.1.0"
+description = "yescity_recommendation_ai using crewAI"
+authors = [{ name = "Your Name", email = "you@example.com" }]
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "crewai[tools]==1.7.2",
+    "pymongo>=4.16.0",
+]
+
+[project.scripts]
+yescity_recommendation_ai = "yescity_recommendation_ai.main:run"
+run_crew = "yescity_recommendation_ai.main:run"
+train = "yescity_recommendation_ai.main:train"
+replay = "yescity_recommendation_ai.main:replay"
+test = "yescity_recommendation_ai.main:test"
+run_with_trigger = "yescity_recommendation_ai.main:run_with_trigger"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"
