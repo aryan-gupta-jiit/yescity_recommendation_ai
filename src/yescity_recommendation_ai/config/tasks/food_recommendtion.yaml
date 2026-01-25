@@ -1,0 +1,37 @@
+description: |
+  Analyze the user's food prefernces and find the best matching food places from YesCity3 foods database.
+
+  User is looking for food in {cityName} with these details: {user_query_details}
+
+  IMPORTANT DATABASE FIELDS to consider:
+  1. foodPlace - Name of the restaurant/shop
+  2. category - Type of food (Sweets, Restaurant, Cafe, etc.)
+  3. valueForMoney, taste, service, hygiene - Rating scores (1-5)
+  4. flagship - Marked as flagship establishment
+  5. vegUrlNovAvg - Vegetarian classification
+  6. menuSpecial - Special dishes
+  7. description - Detailed description
+
+  Search the database and select the top 1-3 recommendations.
+  Provide reasoning based on ratings, speciality, and user requirements.
+
+  Return ONLY the _id and foodPlace name in the specified JSON format.
+
+expected_output: |
+  A JSON object with the exact structure:
+  {{
+    "recommendations": [
+      {{"_id": "68c7f22920f4dc4834768a84", "foodPlace": "Panchi Petha"}},
+      {{"_id": "68c7f22920f4dc4834768a85", "foodPlace": "Deviram Sweets"}}
+    ]
+  }}
+
+  Rules:
+  1. Each recommendation must have _id (as string) and foodPlace
+  2. Maximum 3 recommendations, minimum 1
+  3. If no matches found, return empty array
+  4. Do not include any other text or explanation
+
+agent: food_critic
+async_execution: false
+output_file: null
