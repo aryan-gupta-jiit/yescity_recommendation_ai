@@ -1,5 +1,7 @@
 from typing import Dict, List, Any, Optional
-from crewai import Agent, Task, Crew, Process
+import os
+from crewai import Agent, Task, Crew, Process,LLM
+from langchain_community.llms import Ollama
 from ..services.query_classifier import query_classifier, QueryCategory
 from .yaml_loader import YAMLLoader
 from ..tools.food_tools import food_search_tool
@@ -12,6 +14,27 @@ class CrewManager:
         self.yaml_loader = YAMLLoader()
         self.available_agents = self.yaml_loader.get_available_agents()
         self.available_tasks = self.yaml_loader.get_available_tasks()
+        
+        # # Initialize Ollama LLM for CrewAI agents
+        # ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+        # ollama_model = os.getenv("OLLAMA_MODEL", "ollama/llama3.2:3b")
+        # self.llm = Ollama(
+        #     base_url=ollama_url,
+        #     model=ollama_model,
+        #     temperature=0.7,
+        # )
+        # Initialize Ollama LLM using CrewAI's LLM class
+        ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+        ollama_model = os.getenv("OLLAMA_MODEL", "ollama/llama3.2:3b")
+        
+        # Method 1: Using CrewAI's LLM class with explicit Ollama provider
+        self.llm = LLM(
+            model=ollama_model,
+            provider="ollama",  # Explicitly specify provider
+            base_url=ollama_url,
+            temperature=0.7,
+            max_tokens=2000,
+        )
     
     def create_food_crew(self, city: str, query_details: str) -> Crew:
         """Create a crew for food recommendations."""
@@ -26,7 +49,8 @@ class CrewManager:
             backstory=agent_config["backstory"],
             verbose=agent_config.get("verbose", True),
             allow_delegation=agent_config.get("allow_delegation", False),
-            tools=[food_search_tool]
+            tools=[food_search_tool],
+            llm=self.llm  # Explicitly use Ollama LLM
         )
         
         # Load task configuration
@@ -34,7 +58,7 @@ class CrewManager:
         
         # Create task with dynamic parameters
         description = task_config["description"].format(
-            city=city,
+            cityName=city,
             user_query_details=query_details
         )
         
@@ -51,7 +75,8 @@ class CrewManager:
             agents=[agent],
             tasks=[task],
             process=Process.sequential,
-            verbose=True
+            verbose=True,
+            manager_llm=self.llm  # Explicitly use Ollama for crew manager
         )
         
         return crew
@@ -70,22 +95,22 @@ class CrewManager:
         classification = query_classifier.classify_query(user_query)
         
         # Step 2: Create appropriate crew based on category
-        if classification.category == "food":
-            if not classification.city:
+        if classification.category == "foods":
+            if not classification.cityName:
                 return {
                     "success": False,
                     "error": "Please specify a city for food recommendations.",
-                    "category": "food"
+                    "category": "foods"
                 }
             
             # Extract parameters for food search
             params = classification.parameters
-            query_details = f"Looking for food in {classification.city}"
+            query_details = f"Looking for food in {classification.cityName}"
             if params:
                 query_details += f" with parameters: {params}"
             
             # Create and execute food crew
-            crew = self.create_food_crew(classification.city, query_details)
+            crew = self.create_food_crew(classification.cityName, query_details)
             
             try:
                 result = crew.kickoff()
@@ -96,8 +121,8 @@ class CrewManager:
                 
                 return {
                     "success": True,
-                    "category": "food",
-                    "city": classification.city,
+                    "category": "foods",
+                    "city": classification.cityName,
                     "parameters": params,
                     "recommendations": recommendations,
                     "raw_output": str(result)
@@ -107,7 +132,7 @@ class CrewManager:
                 return {
                     "success": False,
                     "error": f"Error executing crew: {str(e)}",
-                    "category": "food"
+                    "category": "foods"
                 }
         
         else:
@@ -116,7 +141,7 @@ class CrewManager:
                 "success": False,
                 "error": f"Category '{classification.category}' not implemented yet.",
                 "category": classification.category,
-                "city": classification.city
+                "city": classification.cityName
             }
 
 # Create singleton instance
