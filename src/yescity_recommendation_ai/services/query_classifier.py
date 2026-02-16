@@ -40,7 +40,7 @@ class OllamaQueryClassifier:
             "hiddengems",
             "connectivities",
             "placestovisits",
-            "shopping"
+            "shoppings"
         ]
 
         # Create prompt template
@@ -60,7 +60,7 @@ class OllamaQueryClassifier:
                 6. connectivites - internet, SIM cards, WiFi spots
                 7. hiddengems - lesser known local spots, off-the-beaten-path places, unique spots
                 8. placestovisits - popular tourist attractions, landmarks, must-see places
-                9. shopping - markets, malls, shopping streets, local products, shops, souvenirs
+                9. shoppings - markets, malls, shopping streets, local products, shops, souvenirs
 
                 classify this user query into ONE category from: {categories}
 

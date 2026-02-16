@@ -113,11 +113,17 @@ class RecommendationService:
                     except:
                         pass
 
-                # If not found by _id, try by name or foodPlace
+                # If not found by _id, try by name or foodPlace or shops
                 if not doc:
-                    name_field="foodPlace" if category=="food" else "name"
+                    # Determine the name field based on category
+                    if category == "foods":
+                        name_field = "foodPlace"
+                    elif category == "shoppings":
+                        name_field = "shops"
+                    else:
+                        name_field = "name"
 
-                    search_name=rec.get("name") or rec.get("foodPlace")
+                    search_name = rec.get("name") or rec.get("foodPlace") or rec.get("shops")
 
                     if search_name:
                         # try exact match first

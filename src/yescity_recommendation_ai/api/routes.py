@@ -59,7 +59,7 @@ async def get_recommendations(request: UserQueryRequest):
                 recommendations=[
                     {
                         "_id": rec["_id"],
-                        "name": rec["name"],
+                        "name": rec.get("name") or rec.get("foodPlace") or rec.get("shops", "Unknown"),
                         "type": result.get("category")
                     }
                     for rec in result.get("recommendations", [])
