@@ -1,79 +1,79 @@
-# description: |
-#   Analyze the user's food prefernces and find the best matching food places from YesCity3 foods database.
-
-#   User is looking for food in {cityName} with these details: {user_query_details}
-
-#   IMPORTANT DATABASE FIELDS to consider:
-#   1. foodPlace - Name of the restaurant/shop
-#   2. category - Type of food (Sweets, Restaurant, Cafe, etc.)
-#   3. valueForMoney, taste, service, hygiene - Rating scores (1-5)
-#   4. flagship - Marked as flagship establishment
-#   5. vegUrlNovAvg - Vegetarian classification
-#   6. menuSpecial - Special dishes
-#   7. description - Detailed description
-
-#   Search the database and select the top 1-3 recommendations.
-#   Provide reasoning based on ratings, speciality, and user requirements.
-
-#   Return ONLY the _id and foodPlace name in the specified JSON format.
-
-# expected_output: |
-#   A JSON object with the exact structure:
-#   {{
-#     "recommendations": [
-#       {{"_id": "68c7f22920f4dc4834768a84", "foodPlace": "Panchi Petha"}},
-#       {{"_id": "68c7f22920f4dc4834768a85", "foodPlace": "Deviram Sweets"}}
-#     ]
-#   }}
-
-#   Rules:
-#   1. Each recommendation must have _id (as string) and foodPlace
-#   2. Maximum 3 recommendations, minimum 1
-#   3. If no matches found, return empty array
-#   4. Do not include any other text or explanation
-
-# agent: food_critic
-# async_execution: false
-# output_file: null
-
 description: |
-  Analyze the user's shopping preferences and find the best matching shopping places from YesCity3 shoppings database.
+  Analyze the user's food prefernces and find the best matching food places from YesCity3 foods database.
 
-  USER QUERY DETAILS: {user_query_details}
-  CITY: {cityName}
+  User is looking for food in {cityName} with these details: {user_query_details}
 
-  YOUR TASK:
-  1. First, use the search_shopping_places tool with cityName="{cityName}" to get ALL shops in that city
-  2. You will receive COMPLETE data for every shop in the city
-  3. Analyze each shop's details carefully:
-     - Read the 'famousFor' field to understand what the shop specializes in
-     - Check the 'shops' name for clues
-     - Look at 'flagship' status (true = premium establishment)
-     - Consider 'premium' rating (A = top quality)
-  4. Find the shops that BEST match what the user is looking for
-  5. Return the top 1-3 most relevant shops
+  IMPORTANT DATABASE FIELDS to consider:
+  1. foodPlace - Name of the restaurant/shop
+  2. category - Type of food (Sweets, Restaurant, Cafe, etc.)
+  3. valueForMoney, taste, service, hygiene - Rating scores (1-5)
+  4. flagship - Marked as flagship establishment
+  5. vegUrlNovAvg - Vegetarian classification
+  6. menuSpecial - Special dishes
+  7. description - Detailed description
 
-  IMPORTANT: You must analyze ALL the data returned by the tool. Don't just take the first few - read through all shops and find the most relevant ones based on their descriptions.
+  Search the database and select the top 1-3 recommendations.
+  Provide reasoning based on ratings, speciality, and user requirements.
 
-  Example thinking process:
-  - If user wants "petha": Look for shops where famousFor contains "petha" or "sweet" or "traditional"
-  - If user wants "marble handicrafts": Look for shops where famousFor mentions "marble", "inlay", "handicraft"
-  - If user wants "leather goods": Look for shops where famousFor contains "leather", "jacket", "shoe"
+  Return ONLY the _id and foodPlace name in the specified JSON format.
 
 expected_output: |
   A JSON object with the exact structure:
-  {
+  {{
     "recommendations": [
-      {"_id": "68c7f22920f4dc4834768a9a", "shops": "Panchhi Petha"},
-      {"_id": "68c7f22920f4dc4834768a9b", "shops": "Marble Handicraft Agra"}
+      {{"_id": "68c7f22920f4dc4834768a84", "foodPlace": "Panchi Petha"}},
+      {{"_id": "68c7f22920f4dc4834768a85", "foodPlace": "Deviram Sweets"}}
     ]
-  }
+  }}
 
   Rules:
-  1. Each recommendation must have _id (as string) and shops
-  2. Maximum 3 recommendations, minimum 1 if matches found
+  1. Each recommendation must have _id (as string) and foodPlace
+  2. Maximum 3 recommendations, minimum 1
   3. If no matches found, return empty array
   4. Do not include any other text or explanation
 
-agent: shopping_guide
+agent: food_critic
 async_execution: false
+output_file: null
+
+# description: |
+#   Analyze the user's shopping preferences and find the best matching shopping places from YesCity3 shoppings database.
+
+#   USER QUERY DETAILS: {user_query_details}
+#   CITY: {cityName}
+
+#   YOUR TASK:
+#   1. First, use the search_shopping_places tool with cityName="{cityName}" to get ALL shops in that city
+#   2. You will receive COMPLETE data for every shop in the city
+#   3. Analyze each shop's details carefully:
+#      - Read the 'famousFor' field to understand what the shop specializes in
+#      - Check the 'shops' name for clues
+#      - Look at 'flagship' status (true = premium establishment)
+#      - Consider 'premium' rating (A = top quality)
+#   4. Find the shops that BEST match what the user is looking for
+#   5. Return the top 1-3 most relevant shops
+
+#   IMPORTANT: You must analyze ALL the data returned by the tool. Don't just take the first few - read through all shops and find the most relevant ones based on their descriptions.
+
+#   Example thinking process:
+#   - If user wants "petha": Look for shops where famousFor contains "petha" or "sweet" or "traditional"
+#   - If user wants "marble handicrafts": Look for shops where famousFor mentions "marble", "inlay", "handicraft"
+#   - If user wants "leather goods": Look for shops where famousFor contains "leather", "jacket", "shoe"
+
+# expected_output: |
+#   A JSON object with the exact structure:
+#   {
+#     "recommendations": [
+#       {"_id": "68c7f22920f4dc4834768a9a", "shops": "Panchhi Petha"},
+#       {"_id": "68c7f22920f4dc4834768a9b", "shops": "Marble Handicraft Agra"}
+#     ]
+#   }
+
+#   Rules:
+#   1. Each recommendation must have _id (as string) and shops
+#   2. Maximum 3 recommendations, minimum 1 if matches found
+#   3. If no matches found, return empty array
+#   4. Do not include any other text or explanation
+
+# agent: shopping_guide
+# async_execution: false

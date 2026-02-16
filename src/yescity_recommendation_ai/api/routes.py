@@ -58,11 +58,12 @@ async def get_recommendations(request: UserQueryRequest):
                 parameters=result.get("parameters", {}),
                 recommendations=[
                     {
-                        "_id": rec["_id"],
+                        "_id": rec.get("_id", "unknown"),
                         "name": rec.get("name") or rec.get("foodPlace") or rec.get("shops", "Unknown"),
                         "type": result.get("category")
                     }
                     for rec in result.get("recommendations", [])
+                    if rec.get("_id")  # Only include recs with valid _id
                 ],
                 full_data=result.get("full_data", []),
                 processing_time=round(processing_time, 3)
@@ -120,11 +121,12 @@ async def category_search(request: CategoryQueryRequest):
                 parameters=request.filters,
                 recommendations=[
                     {
-                        "_id": rec["_id"],
-                        "name": rec["name"],
+                        "_id": rec.get("_id", "unknown"),
+                        "name": rec.get("name", "Unknown"),
                         "type": request.category
                     }
                     for rec in result.get("recommendations", [])
+                    if rec.get("_id")  # Only include recs with valid _id
                 ],
                 full_data=result.get("full_data", []),
                 processing_time=round(processing_time, 3)
