@@ -28,7 +28,7 @@ class CrewManager:
         # Initialize Ollama LLM using CrewAI's LLM class
         ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
         ollama_model = os.getenv("OLLAMA_MODEL", "ollama/llama3.2:3b")
-        
+        print(ollama_model)
         # Method 1: Using CrewAI's LLM class with explicit Ollama provider
         self.llm = LLM(
             model=ollama_model,
@@ -36,6 +36,7 @@ class CrewManager:
             base_url=ollama_url,
             temperature=0.7,
             max_tokens=2000,
+            timeout=60000,
         )
     
     def create_food_crew(self, city: str, query_details: str) -> Crew:
@@ -289,7 +290,9 @@ class CrewManager:
                 tools=[shopping_search_tool],
                 llm=self.llm,
                 max_iter=5,
-                max_rpm=10
+                max_rpm=10,
+                memory=False,
+                function_calling_llm=self.llm
             )
             print(f"DEBUG: Agent created: {agent}")
             

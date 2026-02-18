@@ -27,6 +27,7 @@ class OllamaQueryClassifier:
             base_url=Ollama_url,
             model=ollama_model,
             temperature=0.1,
+            timeout=60000,
         )
 
         # Define available categories based on your collections

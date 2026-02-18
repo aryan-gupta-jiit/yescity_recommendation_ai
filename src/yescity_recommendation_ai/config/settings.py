@@ -28,7 +28,7 @@ def get_llm_config():
     """Get Ollama LLM configuration with explicit provider"""
     
     ollama_model = os.getenv("OLLAMA_MODEL", "ollama/llama3.2:3b")
-    
+    print(ollama_model)
     # Explicitly configure Ollama provider
     return LLM(
         config={
@@ -36,6 +36,7 @@ def get_llm_config():
             "model": ollama_model,
             "temperature": 0.3,
             "max_tokens": 1000,
+            "timeout": 60000,
             "base_url": "http://localhost:11434",  # Optional, but good to specify
         }
     )
